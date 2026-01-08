@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Legal Load Test</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#0b0f14;color:#e6edf3}
+    .wrap{max-width:860px;margin:24px auto;padding:16px}
+    .card{background:#111827;border:1px solid #1f2937;border-radius:14px;padding:16px}
+    h1{font-size:1.2rem;margin-bottom:6px}
+    .muted{font-size:.8rem;color:#9ca3af}
+    label{display:block;margin-top:12px;font-size:.9rem}
+    input,button{width:100%;padding:10px;border-radius:10px;border:1px solid #1f2937;background:#0b0f14;color:#e6edf3}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    button{margin-top:14px;cursor:pointer}
+    .log{margin-top:16px;background:#0b0f14;border:1px dashed #1f2937;border-radius:10px;padding:10px;height:220px;overflow:auto;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.85rem}
+    .ok{color:#22c55e}.err{color:#ef4444}.warn{color:#f59e0b}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>Legal Load Test (Client-side)</h1>
+    <div class="muted">
+      Gunakan hanya pada server milikmu atau yang kamu punya izin tertulis.
+      Alat ini membatasi concurrency, durasi, dan memberi jeda antar request.
+    </div>
+
+    <label>Target URL (milikmu)</label>
+    <input id="url" type="url" placeholder="https://domainkamu.com/health" required />
+
+    <div class="row">
+      <div>
+        <label>Concurrency (1–50)</label>
+        <input id="concurrency" type="number" min="1" max="50" value="5"/>
+      </div>
+      <div>
+        <label>Durasi (detik, 5–300)</label>
+        <input id="duration" type="number" min="5" max="300" value="30"/>
+      </div>
+    </div>
+
+    <label>
+      <input id="ownConfirm" type="checkbox"/> Saya mengonfirmasi bahwa URL ini milik saya / saya punya izin tertulis.
+    </label>
+
+    <button id="start">Start Test</button>
+    <button id="stop" disabled>Stop</button>
+
+    <div class="log" id="log"></div>
+  </div>
+</div>
+
+<script>
+const logEl = document.getElementById('log');
+const startBtn = document.getElementById('start');
+const stopBtn = document.getElementById('stop');
+let stopFlag = false;
+
+function log(msg, cls=''){
+  const p=document.createElement('div');
+  if(cls) p.className=cls;
+  p.textContent=`[${new Date().toLocaleTimeString()}] ${msg}`;
+  logEl.appendChild(p);
+  logEl.scrollTop=logEl.scrollHeight;
+}
+
+async function worker(url, endAt, stats){
+  while(!stopFlag && Date.now()<endAt){
+    const t0=performance.now();
+    try{
+      await fetch(url,{cache:'no-store'});
+      const t1=performance.now();
+      stats.ok++; stats.times.push(t1-t0);
+    }catch(e){
+      stats.err++;
+    }
+    // jeda agar tidak agresif
+    await new Promise(r=>setTimeout(r,100));
+  }
+}
+
+function summary(stats, startedAt){
+  const total=stats.ok+stats.err;
+  const avg=stats.times.length ? (stats.times.reduce((a,b)=>a+b,0)/stats.times.length).toFixed(1) : 0;
+  const dur=((Date.now()-startedAt)/1000).toFixed(1);
+  log(`Selesai. Total:${total} OK:${stats.ok} ERR:${stats.err} Avg(ms):${avg} Durasi:${dur}s`,'ok');
+}
+
+startBtn.onclick=async()=>{
+  const url=document.getElementById('url').value.trim();
+  const concurrency=Math.min(50,Math.max(1,Number(document.getElementById('concurrency').value)));
+  const duration=Math.min(300,Math.max(5,Number(document.getElementById('duration').value)));
+  const ownConfirm=document.getElementById('ownConfirm').checked;
+
+  logEl.innerHTML='';
+  if(!ownConfirm){ log('Konfirmasi kepemilikan/izin diperlukan.','warn'); return; }
+  if(!url){ log('URL tidak valid.','warn'); return; }
+
+  stopFlag=false; startBtn.disabled=true; stopBtn.disabled=false;
+
+  const endAt=Date.now()+duration*1000;
+  const stats={ok:0,err:0,times:[]};
+  const startedAt=Date.now();
+
+  log(`Mulai → ${url}`);
+  log(`Concurrency:${concurrency} Durasi:${duration}s`);
+
+  const workers=Array.from({length:concurrency},()=>worker(url,endAt,stats));
+  await Promise.all(workers);
+
+  summary(stats,startedAt);
+  startBtn.disabled=false; stopBtn.disabled=true;
+};
+
+stopBtn.onclick=()=>{
+  stopFlag=true;
+  log('Dihentikan oleh pengguna.','warn');
+  startBtn.disabled=false; stopBtn.disabled=true;
+};
+</script>
+</body>
+</html>
