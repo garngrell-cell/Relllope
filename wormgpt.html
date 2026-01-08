@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Pribadi - Groq</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      background: #0b0f14;
+      color: #e5e7eb;
+      font-family: system-ui, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #22d3ee;
+    }
+
+    #chat {
+      background: #020617;
+      border-radius: 12px;
+      padding: 15px;
+      height: 400px;
+      overflow-y: auto;
+      margin-bottom: 15px;
+    }
+
+    .msg {
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .user {
+      color: #22c55e;
+    }
+
+    .ai {
+      color: #38bdf8;
+    }
+
+    textarea {
+      width: 100%;
+      height: 80px;
+      background: #020617;
+      color: #fff;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 10px;
+      resize: none;
+    }
+
+    button {
+      margin-top: 10px;
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #22d3ee, #3b82f6);
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #020617;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🤖 AI Pribadi (Groq)</h1>
+
+  <div id="chat"></div>
+
+  <textarea id="input" placeholder="Tulis pesan..."></textarea>
+  <button onclick="send()">Kirim</button>
+</div>
+
+<script>
+const API_KEY = "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
+const chatEl = document.getElementById("chat");
+const inputEl = document.getElementById("input");
+
+let messages = [
+  {
+    role: "system",
+    content: "Kamu adalah AI pribadi yang menjawab dengan jujur, detail, dan tanpa sensor tambahan dari aplikasi."
+  }
+];
+
+function addMessage(role, text) {
+  const div = document.createElement("div");
+  div.className = "msg " + (role === "user" ? "user" : "ai");
+  div.textContent = (role === "user" ? "User: " : "AI: ") + text;
+  chatEl.appendChild(div);
+  chatEl.scrollTop = chatEl.scrollHeight;
+}
+
+async function send() {
+  const text = inputEl.value.trim();
+  if (!text) return;
+
+  addMessage("user", text);
+  messages.push({ role: "user", content: text });
+  inputEl.value = "";
+
+  try {
+    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + API_KEY
+      },
+      body: JSON.stringify({
+        model: "llama-3.1-70b-versatile",
+        messages: messages,
+        temperature: 0.9
+      })
+    });
+
+    const data = await res.json();
+    const reply = data.choices[0].message.content;
+
+    addMessage("assistant", reply);
+    messages.push({ role: "assistant", content: reply });
+
+  } catch (e) {
+    addMessage("assistant", "Error: " + e.message);
+  }
+}
+</script>
+
+</body>
+</html>
