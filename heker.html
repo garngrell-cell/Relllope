@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DarkVerse • Hardened</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#050507; --panel:rgba(255,255,255,.05);
+      --line:rgba(255,255,255,.18); --text:#e8e8e8;
+      --muted:#a9a9a9; --btn:#b8a9a0;
+      --accent:#9b8cff; --glow:0 0 18px rgba(155,140,255,.18);
+    }
+    *{box-sizing:border-box;font-family:Orbitron,system-ui}
+    body{
+      margin:0; min-height:100vh; color:var(--text); background:
+      radial-gradient(900px 400px at 50% -10%, #1a1a1f 0%, transparent 50%),
+      linear-gradient(180deg,#030305,#07070b);
+      overflow-x:hidden;
+    }
+    .app{max-width:480px;margin:0 auto;padding:16px}
+    .top{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:10px 6px 14px; position:sticky; top:0; z-index:3;
+      background:linear-gradient(180deg, rgba(5,5,7,.9), rgba(5,5,7,.4));
+      backdrop-filter: blur(6px);
+    }
+    .brand{font-weight:800;letter-spacing:1px}
+    .icon{opacity:.9; cursor:pointer; user-select:none}
+    .badge{padding:4px 8px;border:1px solid var(--line);border-radius:999px;font-size:10px;color:var(--muted)}
+    .card{
+      background:var(--panel); border:1px solid var(--line);
+      border-radius:18px; padding:16px; box-shadow:var(--glow);
+      backdrop-filter: blur(10px);
+      animation: pop .35s ease;
+    }
+    @keyframes pop{from{transform:translateY(6px);opacity:0}to{transform:none;opacity:1}}
+    .profile{display:flex;align-items:center;gap:12px}
+    .avatar{
+      width:64px;height:64px;border-radius:50%;
+      background:radial-gradient(circle at 30% 30%, #777, #111);
+      border:1px solid var(--line);
+    }
+    .name{font-size:18px;letter-spacing:1px}
+    .meta{color:var(--muted);font-size:12px;margin-top:2px}
+    .section{margin-top:14px}
+    .label{color:var(--muted);font-size:12px;margin-bottom:6px}
+    .input, .select{
+      width:100%;padding:14px 14px;border-radius:14px;
+      background:transparent;border:1px solid var(--line);
+      color:var(--text);outline:none;
+    }
+    .row{display:flex;gap:10px}
+    .btn{
+      width:100%;padding:14px;border-radius:14px;margin-top:14px;
+      background:var(--btn);color:#222;border:none;font-weight:700;letter-spacing:1px;
+      cursor:pointer; transition:.15s;
+    }
+    .btn:hover{filter:brightness(1.05)}
+    .btn.out{background:transparent;color:var(--text);border:1px solid var(--line)}
+    .btn.alt{background:transparent;color:var(--text);border:1px dashed var(--line)}
+    .hidden{display:none}
+    .note{color:var(--muted);font-size:11px;text-align:center;margin-top:10px}
+    .log{
+      margin-top:10px;height:160px;overflow:auto;font-size:11px;
+      border:1px solid var(--line);border-radius:12px;padding:10px;background:rgba(0,0,0,.35)
+    }
+
+    /* ===== Sidebar Menu ===== */
+    .overlay{
+      position:fixed; inset:0; background:rgba(0,0,0,.55);
+      opacity:0; pointer-events:none; transition:.2s; z-index:4;
+    }
+    .overlay.show{opacity:1; pointer-events:auto}
+    .sidebar{
+      position:fixed; left:0; top:0; bottom:0; width:270px;
+      background:linear-gradient(180deg,#0a0a12,#05050a);
+      border-right:1px solid var(--line);
+      transform:translateX(-100%); transition:.25s; z-index:5;
+      padding:16px; box-shadow: 10px 0 30px rgba(0,0,0,.4);
+    }
+    .sidebar.show{transform:translateX(0)}
+    .side-title{font-weight:800; letter-spacing:1px; margin-bottom:14px}
+    .side-item{
+      padding:12px 10px; border-radius:10px; cursor:pointer;
+      border:1px solid transparent; color:var(--text);
+      display:flex;align-items:center;justify-content:space-between;
+    }
+    .side-item:hover{border-color:var(--line); background:rgba(255,255,255,.04)}
+    .side-foot{position:absolute; left:16px; right:16px; bottom:16px}
+
+    .accent{color:var(--accent)}
+    .chip{border:1px solid var(--line);border-radius:10px;padding:6px 10px;font-size:11px;color:var(--muted)}
+    .swatches{display:flex;gap:8px;flex-wrap:wrap}
+    .swatch{width:28px;height:28px;border-radius:50%;border:1px solid var(--line);cursor:pointer}
+  </style>
+</head>
+<body>
+  <!-- Overlay & Sidebar -->
+  <div id="overlay" class="overlay" onclick="toggleMenu(false)"></div>
+  <aside id="sidebar" class="sidebar">
+    <div class="side-title">MENU</div>
+    <div class="side-item" onclick="go('dashboard')">Dashboard <span class="badge">home</span></div>
+    <div class="side-item" onclick="go('target')">Target <span class="badge">sim</span></div>
+    <div class="side-item" onclick="go('profile')">Profile</div>
+    <div class="side-item" onclick="go('admin')" id="adminMenu">Admin <span class="badge">keys</span></div>
+    <div class="side-item" onclick="go('settings')">Settings</div>
+    <div class="side-item" onclick="go('about')">About</div>
+    <div class="side-foot">
+      <button class="btn out" onclick="logout()">LOGOUT</button>
+    </div>
+  </aside>
+
+  <div class="app">
+    <!-- TOP BAR -->
+    <div class="top">
+      <div class="icon" onclick="toggleMenu(true)">☰</div>
+      <div class="brand">Gojocrash <span class="accent">GANAS</span></div>
+      <div class="icon">ONLINE</div></div>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="login" class="card">
+      <div class="label">ACCESS KEY</div>
+      <input id="key" class="input" placeholder="ENTER YOUR KEY"/>
+      <button class="btn" onclick="doLogin()">LOGIN</button>
+      <div class="note">Auto-login aktif • Key ditanam (hardcoded)</div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="dashboard" class="hidden">
+      <div class="card">
+        <div class="profile">
+          <div class="avatar"></div>
+          <div>
+            <div class="name" id="uname">member</div>
+            <div class="meta" id="umeta">Role: MEMBER • Status: Active</div>
+          </div>
+        </div>
+      </div>
+      <div class="card section">
+        <div class="row">
+          <div class="chip">Logs tersimpan</div>
+          <div class="chip">Tema kustom</div>
+          <div class="chip">Admin terkunci</div>
+        </div>
+        <div class="note">Gunakan ☰ untuk navigasi.</div>
+      </div>
+    </div>
+
+    <!-- TARGET (SIMULATOR) -->
+    <div id="targetPage" class="hidden">
+      <div class="card section">
+        <div class="label">Target Number</div>
+        <input id="target" class="input" placeholder="e.g. +62xxxxxxxxxx"/>
+        <div class="label" style="margin-top:10px">Select Module</div>
+        <select id="bug" class="select">
+          <option value="">Select…</option>
+          <option>ANDROID_VISUAL</option>
+          <option>IOS_UI</option>
+          <option>APP_STRESS_SIM</option>
+        </select>
+        <button class="btn" onclick="send()">RUN SIMULATION</button>
+        <div id="log" class="log"></div>
+        <div class="note">Developer Dexlaza.</div>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div id="profilePage" class="hidden">
+      <div class="card section">
+        <div class="label">User</div>
+        <div class="name" id="pname">member</div>
+        <div class="meta" id="prole">Role: MEMBER</div>
+        <div class="note">Profil demo.</div>
+      </div>
+    </div>
+
+    <!-- ADMIN -->
+    <div id="adminPage" class="hidden">
+      <div class="card section">
+        <div class="label">Admin</div>
+        <div class="note">Panel terkunci. Tidak ada manajemen key di UI.</div>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div id="settingsPage" class="hidden">
+      <div class="card section">
+        <div class="label">Theme Accent</div>
+        <div class="swatches">
+          <div class="swatch" style="background:#9b8cff" onclick="setAccent('#9b8cff')"></div>
+          <div class="swatch" style="background:#00ffd5" onclick="setAccent('#00ffd5')"></div>
+          <div class="swatch" style="background:#ff7a7a" onclick="setAccent('#ff7a7a')"></div>
+          <div class="swatch" style="background:#a3ff7a" onclick="setAccent('#a3ff7a')"></div>
+          <div class="swatch" style="background:#ffd36e" onclick="setAccent('#ffd36e')"></div>
+        </div>
+        <button class="btn alt" onclick="clearLogs()">CLEAR LOGS</button>
+      </div>
+    </div>
+
+    <!-- ABOUT -->
+    <div id="aboutPage" class="hidden">
+      <div class="card section">
+        <div class="label">About</div>
+        <p style="color:var(--muted);font-size:13px">
+          Gojocrash UI • Key tanam • Anti-bypass • Obfuscate • Auto-login • Admin lock.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== SCRIPT ===================== -->
+  <script>
+  (function(){
+    // ---- Basic anti-tamper ----
+    const _toString = Function.prototype.toString;
+    Object.defineProperty(Function.prototype, "toString", { value: function(){ return "[native code]"; }, writable:false });
+    const antiDebug = () => { const s=performance.now(); debugger; if(performance.now()-s>120) location.reload(); };
+    setInterval(antiDebug, 1500);
+
+    // ---- Helpers ----
+    const _at = (s)=>atob(s), _eq=(a,b)=>a===b;
+    const $ = id => document.getElementById(id);
+    const logBox = () => $("log");
+
+    // 🔐 KEY TANAM (OBFUSCATED, BASE64)
+    // ADMIN-9999, ADMIN-1234
+    // USER-1111, USER-2222, MEMBER-0001
+    const _A = [_at("QURNSU4tOTk5OQ=="), _at("QURNSU4tMTIzNA==")];
+    const _U = [_at("VVNFUi0xMTEx"), _at("VVNFUi0yMjIy"), _at("TUVNQkVSLTAwMDE=")];
+
+    const store = {
+      get k(){return localStorage.getItem("dv_key")},
+      set k(v){localStorage.setItem("dv_key",v)},
+      get logs(){return JSON.parse(localStorage.getItem("dv_logs")||"[]")},
+      set logs(v){localStorage.setItem("dv_logs",JSON.stringify(v))},
+      get accent(){return localStorage.getItem("dv_accent")},
+      set accent(v){localStorage.setItem("dv_accent",v)}
+    };
+
+    // Menu
+    window.toggleMenu = function(open){
+      $("sidebar").classList.toggle("show", open);
+      $("overlay").classList.toggle("show", open);
+    };
+
+    function showPage(which){
+      ["dashboard","targetPage","profilePage","adminPage","settingsPage","aboutPage"].forEach(id=>$(id).classList.add("hidden"));
+      if(which==="dashboard") $("dashboard").classList.remove("hidden");
+      if(which==="target") $("targetPage").classList.remove("hidden");
+      if(which==="profile") $("profilePage").classList.remove("hidden");
+      if(which==="admin") $("adminPage").classList.remove("hidden");
+      if(which==="settings") $("settingsPage").classList.remove("hidden");
+      if(which==="about") $("aboutPage").classList.remove("hidden");
+      window.toggleMenu(false);
+    }
+    window.go = function(page){ showPage(page); };
+
+    // Role check
+    function _role(k){
+      if(!_eq(typeof k,"string")) return null;
+      for(let i=0;i<_A.length;i++) if(_eq(k,_A[i])) return "ADMIN";
+      for(let i=0;i<_U.length;i++) if(_eq(k,_U[i])) return "MEMBER";
+      return null;
+    }
+    function _isAdmin(){ return _eq(_role(store.k||""), "ADMIN"); }
+
+    function applyRoleUI(){
+      $("adminMenu").style.display = _isAdmin() ? "flex" : "none";
+      $("umeta").textContent = `Role: ${_isAdmin()?'ADMIN':'MEMBER'} • Status: Active`;
+      $("prole").textContent = `Role: ${_isAdmin()?'ADMIN':'MEMBER'}`;
+    }
+
+    // Auto login
+    if(store.k && _role(store.k)) showDash(); else store.k="";
+
+    window.doLogin = function(){
+      const k = $("key").value.trim();
+      if(!k) return alert("Masukkan key.");
+      const r = _role(k);
+      if(!r) return alert("Key tidak valid.");
+      store.k = k; showDash();
+    };
+
+    function showDash(){
+      $("login").classList.add("hidden");
+      $("dashboard").classList.remove("hidden");
+      const r = _role(store.k);
+      $("uname").textContent = r.toLowerCase();
+      $("pname").textContent = r.toLowerCase();
+      applyRoleUI(); renderLogs(); applyAccent();
+    }
+
+    window.logout = function(){
+      store.k=""; window.toggleMenu(false);
+      ["dashboard","targetPage","profilePage","adminPage","settingsPage","aboutPage"].forEach(id=>$(id).classList.add("hidden"));
+      $("login").classList.remove("hidden"); $("key").value="";
+    };
+
+    // Logs
+    function addLog(t){
+      const arr = store.logs; arr.push({t, ts:new Date().toISOString()});
+      store.logs = arr.slice(-200); renderLogs();
+    }
+    function renderLogs(){
+      const el = logBox(); if(!el) return;
+      el.innerHTML = store.logs.map(l=>`<div>> ${l.t}</div>`).join("");
+      el.scrollTop = el.scrollHeight;
+    }
+    window.clearLogs = function(){ store.logs=[]; renderLogs(); };
+
+    function mask(s){ return s.replace(/\d(?=\d{4})/g,"*"); }
+    window.send = function(){
+      const t = $("target").value.trim(), b = $("bug").value;
+      if(!t || !b) return alert("Isi target dan pilih module.");
+      addLog("Auth: OK"); addLog("Target: "+mask(t)); addLog("Module: "+b);
+      addLog("Dispatching (SIMULATION)..."); setTimeout(()=>addLog("Result: COMPLETED (NO REAL SENDING)"),800);
+    };
+
+    // Settings
+    window.setAccent = function(c){ store.accent=c; applyAccent(); };
+    function applyAccent(){
+      const c=store.accent; if(!c) return;
+      document.documentElement.style.setProperty("--accent", c);
+      document.documentElement.style.setProperty("--glow", `0 0 18px ${c}55`);
+    }
+
+    // Protect admin
+    const _go = window.go;
+    window.go = function(page){ if(page==="admin" && !_isAdmin()) return alert("Admin only."); _go(page); };
+  })();
+  </script>
+</body>
+</html>
