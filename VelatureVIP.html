@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VelatureVIP - WhatsApp Bug</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: #0c0c0c;
+            color: #f1f1f1;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(120, 0, 200, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 100, 200, 0.10) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(200, 0, 100, 0.10) 0%, transparent 50%);
+            z-index: -1;
+        }
+        
+        .glitch-text {
+            position: absolute;
+            top: 30px;
+            font-size: 48px;
+            font-weight: 900;
+            color: #8a2be2;
+            text-shadow: 2px 2px 0 #ff00ff, -2px -2px 0 #00ffff;
+            letter-spacing: 3px;
+            animation: glitch 3s infinite;
+            text-transform: uppercase;
+            z-index: 10;
+        }
+        
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            2% { transform: translate(-2px, 2px); }
+            4% { transform: translate(-2px, -2px); }
+            6% { transform: translate(2px, 2px); }
+            8% { transform: translate(2px, -2px); }
+            10% { transform: translate(0); }
+            100% { transform: translate(0); }
+        }
+        
+        .container {
+            background: rgba(20, 20, 30, 0.95);
+            border-radius: 15px;
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(100, 0, 200, 0.3);
+            position: relative;
+            overflow: hidden;
+            z-index: 5;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(138, 43, 226, 0.1), transparent);
+            transform: rotate(45deg);
+            animation: shine 6s infinite linear;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            color: #8a2be2;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(138, 43, 226, 0.7);
+        }
+        
+        .title {
+            font-size: 1.8rem;
+            color: #e0e0ff;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            color: #aaa;
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+        
+        .role-badge {
+            display: inline-block;
+            background: linear-gradient(90deg, #8a2be2, #4b0082);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-top: 10px;
+            box-shadow: 0 4px 10px rgba(138, 43, 226, 0.4);
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 10px;
+            color: #b0b0ff;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 15px;
+            background: rgba(10, 10, 20, 0.8);
+            border: 2px solid rgba(100, 0, 200, 0.5);
+            border-radius: 10px;
+            color: #f0f0f0;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: #8a2be2;
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.5);
+        }
+        
+        .input-field::placeholder {
+            color: #777;
+        }
+        
+        .select-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .bug-option {
+            background: rgba(15, 15, 25, 0.9);
+            border: 2px solid rgba(80, 0, 160, 0.5);
+            border-radius: 10px;
+            padding: 18px 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .bug-option:hover {
+            transform: translateY(-5px);
+            border-color: #8a2be2;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        .bug-option.active {
+            border-color: #ff00ff;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.7);
+            background: rgba(30, 10, 40, 0.9);
+        }
+        
+        .bug-icon {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #8a2be2;
+        }
+        
+        .bug-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #e0e0ff;
+        }
+        
+        .bug-desc {
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(90deg, #8a2be2, #4b0082);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+            z-index: 2;
+        }
+        
+        .submit-btn:hover {
+            background: linear-gradient(90deg, #9b30ff, #5a00a3);
+            box-shadow: 0 10px 25px rgba(138, 43, 226, 0.5);
+            transform: translateY(-3px);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(1px);
+        }
+        
+        .submit-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+            opacity: 0;
+        }
+        
+        .submit-btn:hover::after {
+            opacity: 1;
+            transform: rotate(45deg) translate(50%, 50%);
+        }
+        
+        .floating-bug {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.3;
+            z-index: 1;
+            animation: float 10s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-20px) rotate(90deg); }
+            50% { transform: translateY(0) rotate(180deg); }
+            75% { transform: translateY(20px) rotate(270deg); }
+            100% { transform: translateY(0) rotate(360deg); }
+        }
+        
+        .floating-bug:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; color: #ff00ff; }
+        .floating-bug:nth-child(2) { top: 20%; right: 10%; animation-delay: 2s; color: #00ffff; }
+        .floating-bug:nth-child(3) { bottom: 15%; left: 10%; animation-delay: 4s; color: #ffff00; }
+        .floating-bug:nth-child(4) { bottom: 25%; right: 5%; animation-delay: 6s; color: #ff8800; }
+        
+        .warning {
+            text-align: center;
+            margin-top: 20px;
+            color: #ff5555;
+            font-size: 0.9rem;
+            padding: 10px;
+            border-radius: 5px;
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #777;
+            font-size: 0.8rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+            pointer-events: none;
+        }
+        
+        /* Efek Kirim Baru */
+        .sending-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+        
+        .sending-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .sending-content {
+            text-align: center;
+            max-width: 500px;
+            padding: 40px;
+            background: rgba(20, 10, 40, 0.9);
+            border-radius: 20px;
+            border: 2px solid #8a2be2;
+            box-shadow: 0 0 50px rgba(138, 43, 226, 0.7);
+        }
+        
+        .sending-title {
+            font-size: 2rem;
+            color: #ff00ff;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(255, 0, 255, 0.7);
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+            100% { opacity: 0.7; transform: scale(1); }
+        }
+        
+        .sending-progress {
+            width: 100%;
+            height: 10px;
+            background: rgba(50, 0, 100, 0.5);
+            border-radius: 5px;
+            margin: 30px 0;
+            overflow: hidden;
+        }
+        
+        .sending-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #8a2be2, #ff00ff);
+            width: 0%;
+            border-radius: 5px;
+            transition: width 0.3s;
+        }
+        
+        .sending-details {
+            font-size: 1.2rem;
+            color: #b0b0ff;
+            margin: 15px 0;
+        }
+        
+        .hacking-animation {
+            font-size: 2.5rem;
+            margin: 20px 0;
+            height: 50px;
+            overflow: hidden;
+        }
+        
+        .hacking-text {
+            display: inline-block;
+            color: #00ffff;
+            font-family: monospace;
+            font-weight: bold;
+            animation: hacking 0.5s infinite;
+        }
+        
+        @keyframes hacking {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+        
+        .countdown {
+            font-size: 3rem;
+            color: #ff5555;
+            font-weight: bold;
+            margin: 20px 0;
+            text-shadow: 0 0 15px rgba(255, 85, 85, 0.7);
+        }
+        
+        .success-message {
+            font-size: 1.5rem;
+            color: #00ff88;
+            margin: 20px 0;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s, transform 0.5s;
+        }
+        
+        .success-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .vibration {
+            animation: vibrate 0.1s infinite;
+        }
+        
+        @keyframes vibrate {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-2px); }
+            50% { transform: translateX(2px); }
+            75% { transform: translateX(-2px); }
+            100% { transform: translateX(0); }
+        }
+        
+        .screen-crack {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M10,10 L90,90 M90,10 L10,90 M50,0 L50,100 M0,50 L100,50" stroke="white" stroke-width="1" opacity="0.1"/></svg>');
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+        
+        .screen-crack.show {
+            opacity: 0.3;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .select-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .glitch-text {
+                font-size: 36px;
+                top: 20px;
+            }
+            
+            .sending-content {
+                padding: 20px;
+                margin: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="glitch-text">Velature VIP</div>
+    
+    <div class="floating-bug"><i class="fas fa-bug"></i></div>
+    <div class="floating-bug"><i class="fas fa-mobile-alt"></i></div>
+    <div class="floating-bug"><i class="fas fa-exclamation-triangle"></i></div>
+    <div class="floating-bug"><i class="fas fa-skull-crossbones"></i></div>
+    
+    <div class="container">
+        <div class="header">
+            <div class="logo">VelatureVIP</div>
+            <div class="title">WhatsApp Bug Controller</div>
+            <div class="subtitle">Advanced messaging platform control system</div>
+            <div class="role-badge">
+                <i class="fas fa-user-secret"></i> DEVELOPER : Dexlaz
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label" for="targetNumber">
+                <i class="fas fa-crosshairs"></i> Target Number
+            </label>
+            <input type="text" id="targetNumber" class="input-field" placeholder="e.g. +62XXXXXXXXX">
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">
+                <i class="fas fa-bug"></i> Select Bug
+            </label>
+            <div class="select-group">
+                <div class="bug-option" data-bug="crash-android">
+                    <div class="bug-icon"><i class="fab fa-android"></i></div>
+                    <div class="bug-name">CRASH ANDROID</div>
+                    <div class="bug-desc">Causes target Android device to crash and reboot</div>
+                </div>
+                
+                <div class="bug-option" data-bug="delay-invisible">
+                    <div class="bug-icon"><i class="fas fa-user-invisible"></i></div>
+                    <div class="bug-name">DELAY INVISIBLE</div>
+                    <div class="bug-desc">Delays message delivery and hides sender info</div>
+                </div>
+                
+                <div class="bug-option" data-bug="crash-ios">
+                    <div class="bug-icon"><i class="fab fa-apple"></i></div>
+                    <div class="bug-name">CRASH IOS</div>
+                    <div class="bug-desc">Forces iOS devices to crash and restart</div>
+                </div>
+            </div>
+        </div>
+        
+        <button class="submit-btn" id="activateBtn">
+            <i class="fas fa-bolt"></i> ACTIVATE BUG
+        </button>
+        
+        <div class="warning">
+            <i class="fas fa-exclamation-circle"></i> For educational purposes only. Use responsibly.
+        </div>
+        
+        <div class="footer">
+            VelatureVIP System v2.5.1 · © 2026 VelatureVIP · All rights reserved
+        </div>
+    </div>
+    
+    <!-- Overlay Efek Kirim -->
+    <div class="sending-overlay" id="sendingOverlay">
+        <div class="sending-content">
+            <div class="sending-title" id="sendingTitle">INJECTING BUG...</div>
+            
+            <div class="hacking-animation">
+                <span class="hacking-text" id="hackingText">[###ACCESSING TARGET###]</span>
+            </div>
+            
+            <div class="sending-details" id="sendingDetails">
+                Target: <span id="targetDisplay">+62XXXXXXXXX</span><br>
+                Bug Type: <span id="bugDisplay">CRASH ANDROID</span>
+            </div>
+            
+            <div class="sending-progress">
+                <div class="sending-progress-bar" id="progressBar"></div>
+            </div>
+            
+            <div class="countdown" id="countdown">3</div>
+            
+            <div class="success-message" id="successMessage">
+                <i class="fas fa-check-circle"></i> BUG SUCCESSFULLY DEPLOYED!
+            </div>
+        </div>
+    </div>
+    
+    <div class="screen-crack" id="screenCrack"></div>
+    <div class="particles" id="particles"></div>
+
+    <script>
+        // Select bug functionality
+        const bugOptions = document.querySelectorAll('.bug-option');
+        let selectedBug = null;
+        
+        bugOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                bugOptions.forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+                selectedBug = option.getAttribute('data-bug');
+            });
+        });
+        
+        // Activate button functionality
+        const activateBtn = document.getElementById('activateBtn');
+        const targetNumber = document.getElementById('targetNumber');
+        const sendingOverlay = document.getElementById('sendingOverlay');
+        const sendingTitle = document.getElementById('sendingTitle');
+        const hackingText = document.getElementById('hackingText');
+        const targetDisplay = document.getElementById('targetDisplay');
+        const bugDisplay = document.getElementById('bugDisplay');
+        const progressBar = document.getElementById('progressBar');
+        const countdown = document.getElementById('countdown');
+        const successMessage = document.getElementById('successMessage');
+        const screenCrack = document.getElementById('screenCrack');
+        
+        // Teks hacking yang berubah-ubah
+        const hackingTexts = [
+            "[###ACCESSING TARGET###]",
+            "[##BYPassing SECURITY##]",
+            "[###INJECTING CODE###]",
+            "[##CRACKING SYSTEM##]",
+            "[###EXECUTING BUG###]",
+            "[##OVERWRITING DATA##]"
+        ];
+        
+        activateBtn.addEventListener('click', () => {
+            if (!targetNumber.value.trim()) {
+                alert('Please enter a target phone number');
+                targetNumber.focus();
+                return;
+            }
+            
+            if (!selectedBug) {
+                alert('Please select a bug type');
+                return;
+            }
+            
+            // Tampilkan overlay efek kirim
+            sendingOverlay.classList.add('active');
+            
+            // Update informasi di overlay
+            targetDisplay.textContent = targetNumber.value;
+            
+            // Tentukan nama bug yang sesuai
+            let bugName = "CRASH ANDROID";
+            if (selectedBug === "delay-invisible") bugName = "DELAY INVISIBLE";
+            if (selectedBug === "crash-ios") bugName = "CRASH IOS";
+            bugDisplay.textContent = bugName;
+            
+            // Reset progress
+            progressBar.style.width = "0%";
+            successMessage.classList.remove("show");
+            countdown.textContent = "3";
+            
+            // Mulai efek hacking
+            startHackingEffect();
+        });
+        
+        function startHackingEffect() {
+            let progress = 0;
+            let hackingIndex = 0;
+            let countdownValue = 3;
+            
+            // Animasi progress bar
+            const progressInterval = setInterval(() => {
+                progress += 2;
+                progressBar.style.width = progress + "%";
+                
+                // Ganti teks hacking setiap 0.5 detik
+                if (progress % 10 === 0) {
+                    hackingText.textContent = hackingTexts[hackingIndex % hackingTexts.length];
+                    hackingIndex++;
+                    
+                    // Tambahkan efek vibrasi pada judul
+                    sendingTitle.classList.add("vibration");
+                    setTimeout(() => {
+                        sendingTitle.classList.remove("vibration");
+                    }, 100);
+                }
+                
+                // Pada progress tertentu, ubah judul
+                if (progress === 30) {
+                    sendingTitle.textContent = "BREACHING SECURITY...";
+                } else if (progress === 60) {
+                    sendingTitle.textContent = "INJECTING PAYLOAD...";
+                } else if (progress === 80) {
+                    sendingTitle.textContent = "EXECUTING BUG...";
+                }
+                
+                // Saat progress mencapai 100%
+                if (progress >= 100) {
+                    clearInterval(progressInterval);
+                    startCountdown();
+                }
+            }, 50);
+            
+            // Efek partikel selama proses
+            createHackingParticles();
+        }
+        
+        function startCountdown() {
+            sendingTitle.textContent = "DEPLOYING IN...";
+            let countdownValue = 3;
+            
+            const countdownInterval = setInterval(() => {
+                countdown.textContent = countdownValue;
+                
+                // Efek visual pada countdown
+                countdown.style.transform = "scale(1.5)";
+                setTimeout(() => {
+                    countdown.style.transform = "scale(1)";
+                }, 200);
+                
+                // Efek layar retak pada hitungan terakhir
+                if (countdownValue === 1) {
+                    screenCrack.classList.add("show");
+                    
+                    // Efek ledakan partikel
+                    createExplosionEffect();
+                }
+                
+                countdownValue--;
+                
+                if (countdownValue < 0) {
+                    clearInterval(countdownInterval);
+                    showSuccess();
+                }
+            }, 1000);
+        }
+        
+        function showSuccess() {
+            // Tampilkan pesan sukses
+            successMessage.classList.add("show");
+            sendingTitle.textContent = "MISSION ACCOMPLISHED";
+            sendingTitle.style.color = "#00ff88";
+            
+            // Efek partikel sukses
+            createSuccessParticles();
+            
+            // Tampilkan pesan akhir
+            setTimeout(() => {
+                // Sembunyikan overlay
+                sendingOverlay.classList.remove("active");
+                screenCrack.classList.remove("show");
+                
+                // Reset tampilan
+                sendingTitle.textContent = "INJECTING BUG...";
+                sendingTitle.style.color = "#ff00ff";
+                successMessage.classList.remove("show");
+                
+                // Tampilkan alert konfirmasi
+                alert(`Bug ${selectedBug.toUpperCase()} successfully deployed to ${targetNumber.value}\n\nTarget device will experience system instability within 5-10 seconds.\n\nThis is a simulation for educational purposes only.`);
+                
+                // Reset form
+                bugOptions.forEach(opt => opt.classList.remove('active'));
+                selectedBug = null;
+                targetNumber.value = '';
+            }, 3000);
+        }
+        
+        function createHackingParticles() {
+            const particles = document.getElementById('particles');
+            
+            // Hapus partikel lama
+            particles.innerHTML = '';
+            
+            // Buat partikel hijau (hacking)
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.innerHTML = '<i class="fas fa-code"></i>';
+                    particle.style.position = 'absolute';
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.top = Math.random() * 100 + '%';
+                    particle.style.fontSize = Math.random() * 15 + 10 + 'px';
+                    particle.style.color = '#00ff88';
+                    particle.style.opacity = '0.7';
+                    particle.style.zIndex = '9999';
+                    particle.style.pointerEvents = 'none';
+                    
+                    particles.appendChild(particle);
+                    
+                    // Animasi partikel
+                    particle.animate([
+                        { transform: 'scale(0) rotate(0deg)', opacity: 0 },
+                        { transform: 'scale(1) rotate(180deg)', opacity: 0.7 },
+                        { transform: 'scale(0) rotate(360deg)', opacity: 0 }
+                    ], {
+                        duration: Math.random() * 1000 + 1000,
+                        easing: 'ease-out'
+                    });
+                    
+                    // Hapus partikel setelah animasi
+                    setTimeout(() => {
+                        if (particle.parentNode) {
+                            particle.remove();
+                        }
+                    }, 2000);
+                }, i * 100);
+            }
+        }
+        
+        function createExplosionEffect() {
+            const particles = document.getElementById('particles');
+            
+            // Buat efek ledakan merah
+            for (let i = 0; i < 100; i++) {
+                const particle = document.createElement('div');
+                particle.innerHTML = '<i class="fas fa-exclamation"></i>';
+                particle.style.position = 'absolute';
+                particle.style.left = '50%';
+                particle.style.top = '50%';
+                particle.style.fontSize = Math.random() * 25 + 15 + 'px';
+                particle.style.color = ['#ff0000', '#ff5555', '#ff8800'][Math.floor(Math.random() * 3)];
+                particle.style.opacity = '0.9';
+                particle.style.zIndex = '9999';
+                particle.style.pointerEvents = 'none';
+                
+                particles.appendChild(particle);
+                
+                // Animate particle explosion
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 8 + 4;
+                const distance = Math.random() * 200 + 100;
+                
+                const x = Math.cos(angle) * distance;
+                const y = Math.sin(angle) * distance;
+                
+                particle.animate([
+                    { transform: 'translate(0, 0) scale(1)', opacity: 0.9 },
+                    { transform: `translate(${x}px, ${y}px) scale(0)`, opacity: 0 }
+                ], {
+                    duration: Math.random() * 1000 + 1000,
+                    easing: 'cubic-bezier(0.215, 0.610, 0.355, 1)'
+                });
+                
+                // Remove particle after animation
+                setTimeout(() => {
+                    if (particle.parentNode) {
+                        particle.remove();
+                    }
+                }, 2000);
+            }
+        }
+        
+        function createSuccessParticles() {
+            const particles = document.getElementById('particles');
+            
+            // Buat efek partikel sukses (hijau dan ungu)
+            for (let i = 0; i < 80; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.innerHTML = '<i class="fas fa-check"></i>';
+                    particle.style.position = 'absolute';
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.top = Math.random() * 100 + '%';
+                    particle.style.fontSize = Math.random() * 20 + 15 + 'px';
+                    particle.style.color = i % 2 === 0 ? '#00ff88' : '#8a2be2';
+                    particle.style.opacity = '0.8';
+                    particle.style.zIndex = '9999';
+                    particle.style.pointerEvents = 'none';
+                    
+                    particles.appendChild(particle);
+                    
+                    // Animasi partikel melayang
+                    particle.animate([
+                        { transform: 'translateY(0) scale(0)', opacity: 0 },
+                        { transform: 'translateY(-20px) scale(1)', opacity: 0.8 },
+                        { transform: 'translateY(-40px) scale(0)', opacity: 0 }
+                    ], {
+                        duration: Math.random() * 1000 + 1500,
+                        easing: 'ease-out'
+                    });
+                    
+                    // Hapus partikel setelah animasi
+                    setTimeout(() => {
+                        if (particle.parentNode) {
+                            particle.remove();
+                        }
+                    }, 2500);
+                }, i * 50);
+            }
+        }
+        
+        // Add keypress effects
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                activateBtn.click();
+            }
+        });
+        
+        // Input field effects
+        targetNumber.addEventListener('focus', () => {
+            targetNumber.style.boxShadow = '0 0 15px rgba(138, 43, 226, 0.7)';
+        });
+        
+        targetNumber.addEventListener('blur', () => {
+            targetNumber.style.boxShadow = 'none';
+        });
+    </script>
+</body>
+</html>
